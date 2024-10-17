@@ -15,6 +15,29 @@ import { sessionSelect } from 'src/_utils/entities-select-templates';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
+  async getSession(userId) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    return await prisma.session.create({
+      data: {
+        userId: userId,
+        token: await this.jwtService.signAsync({
+          sub: userId,
+          username: user.name,
+        }),
+      },
+      select: sessionSelect,
+    });
+  }
+
   async register({
     email,
     name,
@@ -66,7 +89,7 @@ export class AuthService {
       : false;
 
     if (!isPasswordValid) {
-      throw new BadRequestException();
+      throw new BadRequestException('Dados inválidos');
     }
 
     const session = await prisma.session.create({
