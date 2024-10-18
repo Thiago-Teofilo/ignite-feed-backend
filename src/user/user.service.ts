@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { prisma } from 'src/_integrations/prisma';
 import { GetUserDto } from './dto/request/ge-user.dto';
 import { rootPostSelects } from 'src/_utils/entities-select-templates';
+import { EditUserDto } from './dto/request/edit-user.dto';
 
 @Injectable()
 export class UserService {
@@ -42,5 +43,17 @@ export class UserService {
         Comment: undefined,
       })),
     };
+  }
+
+  async editUser({ bannerUrl, avatarUrl }: EditUserDto, userId: string) {
+    await prisma.user.update({
+      data: {
+        bannerUrl,
+        avatarUrl,
+      },
+      where: {
+        id: userId,
+      },
+    });
   }
 }

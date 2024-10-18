@@ -3,6 +3,7 @@ export const userSelects = {
   name: true,
   email: true,
   avatarUrl: true,
+  bannerUrl: true,
   role: true,
 };
 
