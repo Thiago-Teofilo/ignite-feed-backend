@@ -11,7 +11,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Post('session')
-  async createPost(@Req() request: Request) {
+  async getSession(@Req() request: Request) {
     const userId = request['user'].sub as string;
     return this.authService.getSession(userId);
   }
